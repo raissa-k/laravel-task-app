@@ -1,0 +1,21 @@
+@baseUrl = http://localhost:8082
+
+### Lista todas as tasks (JSON)
+GET {{baseUrl}}/api
+Accept: application/json
+
+### Lista todas as tasks (JSON) — alias
+GET {{baseUrl}}/api/tasks
+Accept: application/json
+
+### Busca task específica
+GET {{baseUrl}}/api/tasks/1
+Accept: application/json
+
+### 404: task inexistente
+GET {{baseUrl}}/api/tasks/99999
+Accept: application/json
+
+### 404: rota inexistente
+GET {{baseUrl}}/api/nao-existe
+Accept: application/json
