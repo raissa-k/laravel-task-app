@@ -17,7 +17,7 @@ porém escrito do jeito Laravel — Eloquent, FormRequest, Blade, Route::resourc
 | `src/Core/Router.php`                  | `routes/web.php` + `routes/api.php` (framework)      |
 | `src/Controllers/TaskController.php`   | `app/Http/Controllers/TaskController.php`            |
 | `src/Controllers/Api/TaskApiController`| `app/Http/Controllers/Api/TaskApiController.php`     |
-| `src/Services/TaskService.php`         | Eloquent no model `App\Models\Task`                  |
+| `src/Services/TaskService.php`         | `app/Services/TaskService.php`                       |
 | `src/Models/Task.php` (DTO)            | `app/Models/Task.php` (Eloquent)                     |
 | `src/database/init.sql`                | `database/migrations/*_create_tasks_table.php`       |
 | `src/views/*.php` + `_layout.php`      | `resources/views/layouts/app.blade.php` + `tasks/*`  |
@@ -117,7 +117,21 @@ DB_PASSWORD=app123
 
 MySQL exposto em `localhost:3309`.
 
-## Próximos passos sugeridos para estudo
+## Service Layer
+
+Os controllers nao acessam o banco diretamente. A logica de dados fica em `app/Services/TaskService.php`:
+
+| Metodo | O que faz |
+|---|---|
+| `list()` | Retorna todas as tasks ordenadas por id desc |
+| `find(int $id)` | Busca uma task por id (ou 404) |
+| `create(array $data)` | Cria uma task |
+| `update(Task $task, array $data)` | Atualiza uma task |
+| `delete(Task $task)` | Remove uma task |
+
+Tanto `TaskController` (web) quanto `TaskApiController` (API) recebem o service via constructor injection. O Laravel resolve automaticamente — nao precisa registrar no container.
+
+## Proximos passos sugeridos para estudo
 
 - Criar `TaskResource` (API Resource) para controlar o shape do JSON
 - Adicionar paginação com `Task::paginate()` no index

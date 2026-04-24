@@ -4,14 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\TaskRequest;
 use App\Models\Task;
+use App\Services\TaskService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
 class TaskController extends Controller
 {
+    public function __construct(
+        private readonly TaskService $taskService,
+    ) {}
+
     public function index(): View
     {
-        $tasks = Task::query()->orderByDesc('id')->get();
+        $tasks = $this->taskService->list();
 
         return view('tasks.index', compact('tasks'));
     }
@@ -23,7 +28,7 @@ class TaskController extends Controller
 
     public function store(TaskRequest $request): RedirectResponse
     {
-        $task = Task::create($request->validated());
+        $task = $this->taskService->create($request->validated());
 
         return redirect()
             ->route('tasks.index')
@@ -37,7 +42,7 @@ class TaskController extends Controller
 
     public function update(TaskRequest $request, Task $task): RedirectResponse
     {
-        $task->update($request->validated());
+        $this->taskService->update($task, $request->validated());
 
         return redirect()
             ->route('tasks.index')
@@ -46,7 +51,7 @@ class TaskController extends Controller
 
     public function destroy(Task $task): RedirectResponse
     {
-        $task->delete();
+        $this->taskService->delete($task);
 
         return redirect()
             ->route('tasks.index')

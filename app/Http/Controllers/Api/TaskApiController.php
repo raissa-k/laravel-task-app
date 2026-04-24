@@ -4,13 +4,18 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Task;
+use App\Services\TaskService;
 use Illuminate\Http\JsonResponse;
 
 class TaskApiController extends Controller
 {
+    public function __construct(
+        private readonly TaskService $taskService,
+    ) {}
+
     public function index(): JsonResponse
     {
-        $tasks = Task::query()->orderByDesc('id')->get();
+        $tasks = $this->taskService->list();
 
         return response()->json([
             'ok' => true,
